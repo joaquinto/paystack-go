@@ -2,7 +2,6 @@ package paystack
 
 import (
 	"fmt"
-	"net/url"
 )
 
 // ChargeService handles operations related to bulk charges
