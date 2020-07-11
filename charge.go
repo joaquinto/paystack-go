@@ -29,6 +29,15 @@ type BankAccount struct {
 	AccountNumber string `json:"account_number,omitempty"`
 }
 
+// Extras represent extra data that would be required to complete the payment like submit pin, submit otp and so on
+type Extras struct {
+	Pin           string     `json:"pin,omitempty"`
+	PhoneNumber   string     `json:"phone,omitempty"`
+	OTP           string     `json:"otp,omitempty"`
+	Birthday      string     `json:"birthday,omitempty"`
+	Reference     string     `json:"reference,omitempty"`
+}
+
 // ChargeRequest represents a Paystack charge request
 type ChargeRequest struct {
 	Email             string       `json:"email,omitempty"`
@@ -60,7 +69,7 @@ func (s *ChargeService) Tokenize(req *ChargeRequest) (Response, error) {
 // SubmitPIN submits PIN to continue a charge
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
 func (s *ChargeService) SubmitPIN(pin, reference string) (Response, error) {
-	data := map[string]string{"pin": pin, "reference": reference}
+	data := &Extras{Pin: pin, Reference: reference}
 	resp := Response{}
 	err := s.client.Call("POST", "/charge/submit_pin", data, &resp)
 	return resp, err
@@ -69,9 +78,7 @@ func (s *ChargeService) SubmitPIN(pin, reference string) (Response, error) {
 // SubmitOTP submits OTP to continue a charge
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
 func (s *ChargeService) SubmitOTP(otp, reference string) (Response, error) {
-	data := url.Values{}
-	data.Add("pin", otp)
-	data.Add("reference", reference)
+	data := &Extras{OTP: otp, Reference: reference}
 	resp := Response{}
 	err := s.client.Call("POST", "/charge/submit_otp", data, &resp)
 	return resp, err
@@ -80,9 +87,7 @@ func (s *ChargeService) SubmitOTP(otp, reference string) (Response, error) {
 // SubmitPhone submits Phone when requested
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
 func (s *ChargeService) SubmitPhone(phone, reference string) (Response, error) {
-	data := url.Values{}
-	data.Add("pin", phone)
-	data.Add("reference", reference)
+	data := &Extras{PhoneNumber: phone, Reference: reference}
 	resp := Response{}
 	err := s.client.Call("POST", "/charge/submit_phone", data, &resp)
 	return resp, err
@@ -91,9 +96,7 @@ func (s *ChargeService) SubmitPhone(phone, reference string) (Response, error) {
 // SubmitBirthday submits Birthday when requested
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
 func (s *ChargeService) SubmitBirthday(birthday, reference string) (Response, error) {
-	data := url.Values{}
-	data.Add("pin", birthday)
-	data.Add("reference", reference)
+	data := &Extras{Birthday: birthday, Reference: reference}
 	resp := Response{}
 	err := s.client.Call("POST", "/charge/submit_birthday", data, &resp)
 	return resp, err
