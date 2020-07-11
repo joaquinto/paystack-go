@@ -60,9 +60,7 @@ func (s *ChargeService) Tokenize(req *ChargeRequest) (Response, error) {
 // SubmitPIN submits PIN to continue a charge
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
 func (s *ChargeService) SubmitPIN(pin, reference string) (Response, error) {
-	data := url.Values{}
-	data.Add("pin", pin)
-	data.Add("reference", reference)
+	data := map[string]string{"pin": pin, "reference": reference}
 	resp := Response{}
 	err := s.client.Call("POST", "/charge/submit_pin", data, &resp)
 	return resp, err
